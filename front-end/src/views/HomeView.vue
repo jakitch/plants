@@ -1,18 +1,87 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<div class="home">
+  <typewriter class="zen-type"
+    :replace="replace"
+    :type-replace="100"
+    :replace-interval="1250">
+    Looking for zen?
+  </typewriter>
+  <div class="button" v-on:click="switchToPlanter">Plant Here</div>
+</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Typewriter from "typewriter-vue"
 export default {
-  name: 'HomeView',
+  name:'HomeView',
   components: {
-    HelloWorld
-  }
+    Typewriter,
+  },
+  data: () => ({
+    replace: [
+      {
+      from: "Looking for zen?",
+      to: "We have you covered.",
+      }
+    ]
+  }),
+  methods: {
+    switchToPlanter() {
+      this.$router.push('/planter');
+    },
+  },
 }
 </script>
+
+<style scoped>
+
+.home{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zen-type {
+   user-select: none;
+  font-size: 140px;
+  padding: 10px;
+}
+
+.home h2 {
+  padding: 20px;
+  font-size: 25px;
+}
+
+.button {
+  user-select: none;
+  cursor: pointer;
+  font-size: 30px;
+  background-color: #ffffff00;
+  border-radius: 10px;
+  border: 3px solid #c4d270;
+  color: #228c22;
+  padding: 0.3em;
+  width: 200px;
+  margin: 0 auto 25px auto;
+}
+
+.button:hover {
+  background-color: #c4d270;
+  color: white;
+    /*background-color: #86b64f;*/
+}
+
+.button:active {
+  background-color: #c4d270;
+  color: white;
+}
+
+@media (max-width: 450px) {
+
+  .zen-type {
+    font-size: 50px;
+    margin-bottom: 25px;
+  }
+}
+</style>

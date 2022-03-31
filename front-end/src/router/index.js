@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PlanterView from '../views/PlanterView.vue'
+import ShelfView from '../views/ShelfView.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/planter',
     name: 'planter',
     component: PlanterView
+  },
+  {
+    path: '/shelf',
+    name: 'shelf',
+    component: ShelfView
   }
 ]
 
