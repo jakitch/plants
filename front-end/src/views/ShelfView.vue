@@ -1,4 +1,10 @@
 <template>
+<div>
+  <div id="garden-tag">
+    <h2 id="title" v-if="!editingGarden">{{gardenName}}</h2>
+    <input id="title-change" v-if="editingGarden" spellcheck="false"/>
+    <img id="editButton" src="images/edit.png" @click="editGarden">
+  </div>
   <ul class="shelf">
     <li
       class="plant-container"
@@ -8,16 +14,17 @@
       v-on:dragstart="dragItem(plant)"
       v-on:dragover.prevent
       v-on:drop="dropItem(plant)"
-    >
-      <div class="name-tag">
-        <h2 class="plant-name">{{ plant.name }}</h2>
-        <div class="delete-button" @click="removePlant(plant)">X</div>
-      </div>
-
+    > 
+      <div class="delete-button" v-if="editingGarden" @click="removePlant(plant)">X</div>
       <img class="plant-type" :src="plant.plantType" />
       <img class="pot-type" :src="plant.potType" />
+      <div class="name-tag">
+        <img class="shelf-img" src="images/shelf.png" />
+        <h2 class="plant-name">{{ plant.name }}</h2>
+      </div>
     </li>
   </ul>
+</div>
 </template>
 
 <script>
@@ -30,6 +37,8 @@ export default {
   },
   data() {
     return {
+      editingGarden: false,
+      gardenName: "The Zen Garden",
       plants: [],
       drag: {},
     };
@@ -66,6 +75,9 @@ export default {
       this.plants.splice(indexItem, 1);
       this.plants.splice(indexTarget, 0, this.drag);
     },
+    editGarden() {
+      this.editingGarden = !this.editingGarden
+    },
   },
 };
 </script>
@@ -81,29 +93,21 @@ export default {
   display: flex;
   flex-direction: column;
   padding-top: 25px;
-}
-.name-tag {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .plant-type {
   user-select: none;
   -webkit-user-drag: none;
-  width: 200px;
+  width: 275px;
   height: auto;
 }
 .pot-type {
   user-select: none;
   -webkit-user-drag: none;
-  width: 200px;
+  width: 275px;
   height: auto;
-}
-
-.plant-name {
-  margin-top: auto;
-  margin-bottom: auto;
 }
 
 .delete-button {
@@ -129,5 +133,41 @@ export default {
 
 .name-tag h2 {
   font-size: 20px;
+}
+
+.shelf-img {
+  width: 275px;
+  height: auto;
+}
+
+.plant-name {
+  position: absolute;
+  background: #805301;
+  /*background: rgba(62, 141, 161, 0.411);*/
+  color: #c4d270;
+  border-radius: 5px;
+  padding: 5px;
+  /*border: 2px solid rgb(62, 141, 161)/*#c4d270;*/
+}
+.name-tag {
+  display: flex;
+  justify-content: center;
+}
+ul {
+  padding: 0;
+}
+#garden-tag{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#editButton {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
 }
 </style>

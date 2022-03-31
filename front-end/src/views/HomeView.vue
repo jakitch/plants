@@ -6,7 +6,7 @@
     :replace-interval="1250">
     Looking for zen?
   </typewriter>
-  <div class="button" v-on:click="switchToPlanter">Plant Here</div>
+  <div class="button" v-on:click="switchToPlanter">Start Planting</div>
 </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
     replace: [
       {
       from: "Looking for zen?",
-      to: "We have you covered.",
+      to: "Plant here.",
       }
     ]
   }),
@@ -62,7 +62,7 @@ export default {
   border: 3px solid #c4d270;
   color: #228c22;
   padding: 0.3em;
-  width: 200px;
+  width: 250px;
   margin: 0 auto 25px auto;
 }
 
