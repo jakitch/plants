@@ -6,6 +6,8 @@ const plantSchema = new mongoose.Schema({
     name: String,
     plantType: String,
     potType: String,
+    isEmpty: Boolean,
+    index: Number,
 });
 
 const Plant = mongoose.model('Plant', plantSchema);
@@ -32,10 +34,15 @@ app.get('/api/plants', async(req, res) => {
 
 app.post('/api/plants', async(req, res) => {
     try {
+        await Plant.deleteOne({
+            index: req.body.index,
+        });
         const plant = new Plant({
             name: req.body.name,
             plantType: req.body.plantType,
-            potType: req.body.potType
+            potType: req.body.potType,
+            isEmpty: req.body.isEmpty,
+            index: req.body.index,
         });
         await plant.save();
         res.send(plant);
@@ -50,6 +57,25 @@ app.delete('/api/plants/:id', async(req, res) => {
         await Plant.deleteOne({
             _id: req.params.id
         });
+        res.sendStatus(200);
+    } catch(error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.delete('/api/plants', async(req, res) => {
+    try {
+        await Plant.deleteMany();
+        for (let i = 0; i < 10; i++) {
+            await new Plant({
+                name: '',
+                plantType: 'images/empty-plant.png',
+                potType: 'images/empty-pot.png',
+                isEmpty: true,
+                index: i
+            }).save()
+        }
         res.sendStatus(200);
     } catch(error) {
         console.log(error);

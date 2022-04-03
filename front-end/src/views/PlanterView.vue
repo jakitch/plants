@@ -43,7 +43,11 @@ export default {
         "images/plant-01.png",
         "images/plant-02.png",
         "images/plant-03.png",
+        "images/plant-04.png",
         "images/plant-05.png",
+        "images/plant-06.png",
+        "images/plant-07.png",
+        "images/plant-08.png",
       ],
       potList: [
         "images/pot-01.png",
@@ -51,6 +55,9 @@ export default {
         "images/pot-03.png",
         "images/pot-04.png",
         "images/pot-05.png",
+        "images/pot-06.png",
+        "images/pot-07.png",
+        "images/pot-08.png",
       ],
     };
   },
@@ -92,17 +99,42 @@ export default {
       return num;
     },
     randomizePlant() {
-        this.currPlant = this.getRandomInt(0, this.plantList.length - 1);
-        this.currPot = this.getRandomInt(0, this.potList.length - 1);
+      this.currPlant = this.getRandomInt(0, this.plantList.length - 1);
+      this.currPot = this.getRandomInt(0, this.potList.length - 1);
+    },
+    getNextAvaiableSpot(takenSpots) {
+      let allSpots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for(let spot in allSpots) {
+        if (!takenSpots.includes(spot)) {
+          return spot;
+        }
+      }
     },
     async addPlant() {
       try {
-        if (this.plantName === "") this.plantName = "Unamed :(";
-        await axios.post("/api/plants", {
+        let plantResult = await axios.get('/api/plants');
+        let plants = plantResult.data;
+        console.log(plants);
+        let plantCount = 0;
+        let takenSpots = [];
+        
+        for (let plant of plants) {
+          if(!plant.isEmpty) {
+            plantCount++;
+            takenSpots.push(plant.index);
+          }
+        }
+    
+        if(plantCount < 10) {
+          let nextSpot = this.getNextAvaiableSpot(takenSpots);
+          await axios.post("/api/plants", {
           name: this.plantName,
           plantType: this.plantList[this.currPlant],
           potType: this.potList[this.currPot],
-        });
+          isEmpty: false,
+          index: nextSpot
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -113,7 +145,7 @@ export default {
 
 <style scoped>
 .sign {
-  width: 200px;
+  width: 300px;
   height: auto;
   margin-bottom: 20px;
   margin-top: 20px;

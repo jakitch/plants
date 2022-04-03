@@ -4,6 +4,7 @@
     <h2 id="title" v-if="!editingGarden">{{gardenName}}</h2>
     <input id="title-change" v-if="editingGarden" spellcheck="false"/>
     <img id="editButton" src="images/edit.png" @click="editGarden">
+    <div class="delete-button" v-if="editingGarden" @click="removeAll()">X</div>
   </div>
   <ul class="shelf">
     <li
@@ -39,6 +40,9 @@ export default {
     return {
       editingGarden: false,
       gardenName: "The Zen Garden",
+      emptyPlant: {
+
+      },
       plants: [],
       drag: {},
     };
@@ -48,6 +52,7 @@ export default {
       try {
         let response = await axios.get("/api/plants");
         this.plants = response.data;
+        console.log(this.plants);
         return this.plants;
       } catch (error) {
         console.log(error);
@@ -63,6 +68,14 @@ export default {
         await axios.delete("/api/plants/" + plant._id);
         this.getPlants();
       } catch (error) {
+        console.log(error);
+      }
+    },
+    async removeAll() {
+      try{
+        await axios.delete('/api/plants');
+        this.getPlants();
+      } catch(error) {
         console.log(error);
       }
     },
