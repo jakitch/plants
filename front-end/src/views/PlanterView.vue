@@ -25,7 +25,9 @@
     <div class="button-container">
       <div id="addButton" @click="addPlant">Add</div>
       <div id="randomizeButton" @click="randomizePlant">Randomize</div>
+      <div id="shelfButton" @click="gotoShelf">Go To Shelf</div>
     </div>
+    <h2 id="toast">{{toastMessage}}</h2>
   </div>
 </template>
 
@@ -34,11 +36,15 @@ import axios from "axios";
 
 export default {
   name: "PlanterView",
+  created() {
+    this.randomizePlant()
+  },
   data() {
     return {
       plantName: "",
       currPlant: 0,
       currPot: 0,
+      toastMessage:"Don't forget to name your plant!",
       plantList: [
         "images/plant-01.png",
         "images/plant-02.png",
@@ -93,9 +99,7 @@ export default {
     getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
-      console.log()
       let num = Math.floor(Math.random() * (max - min + 1)) + min;
-      console.log(num);
       return num;
     },
     randomizePlant() {
@@ -105,8 +109,8 @@ export default {
     getNextAvaiableSpot(takenSpots) {
       let allSpots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
       for(let spot in allSpots) {
-        if (!takenSpots.includes(spot)) {
-          return spot;
+        if (!takenSpots.includes(Number(spot))) {
+          return Number(spot);
         }
       }
     },
@@ -114,7 +118,6 @@ export default {
       try {
         let plantResult = await axios.get('/api/plants');
         let plants = plantResult.data;
-        console.log(plants);
         let plantCount = 0;
         let takenSpots = [];
         
@@ -124,21 +127,29 @@ export default {
             takenSpots.push(plant.index);
           }
         }
-    
         if(plantCount < 10) {
+ 
           let nextSpot = this.getNextAvaiableSpot(takenSpots);
-          await axios.post("/api/plants", {
+          await axios.post("/api/plant", {
           name: this.plantName,
           plantType: this.plantList[this.currPlant],
           potType: this.potList[this.currPot],
           isEmpty: false,
           index: nextSpot
           });
+          this.toastMessage = "Added to shelf!"
+        }
+        else {
+          this.toastMessage = "Shelf is full!"
         }
       } catch (error) {
         console.log(error);
+        this.toastMessage = "Something is wrong..."
       }
     },
+    gotoShelf() {
+    this.$router.push('/shelf');
+  }
   },
 };
 </script>
@@ -149,10 +160,12 @@ export default {
   height: auto;
   margin-bottom: 20px;
   margin-top: 20px;
+  -webkit-user-drag: none;
+  user-select: none
 }
 .planter input {
   width: 175px;
-  padding-top: 44px;
+  padding-top: 150px;
   font-size: 20px;
   position: absolute;
   left: 50%;
@@ -163,10 +176,14 @@ export default {
   text-align: center;
   background: #fffff000;
   color: black;
+  -webkit-user-drag: none;
+  user-select: none
 }
 .planter input::placeholder {
   color: black;
   font-style: italic;
+  -webkit-user-drag: none;
+  user-select: none
 }
 .img_container {
   display: flex;
@@ -176,15 +193,21 @@ export default {
 #plant {
   width: 300px;
   height: auto;
+  -webkit-user-drag: none;
+  user-select: none
 }
 #pot {
   width: 300px;
   height: auto;
+  -webkit-user-drag: none;
+  user-select: none
 }
 .arrow {
   cursor: pointer;
   width: 50px;
   height: 50px;
+  -webkit-user-drag: none;
+  user-select: none
 }
 .plant_selector {
   display: flex;
@@ -213,10 +236,6 @@ export default {
   background-color: #c4d270;
   color: white;
 }
-#addButton:active {
-  background-color: #c4d270;
-  color: white;
-}
 #randomizeButton {
   user-select: none;
   cursor: pointer;
@@ -227,12 +246,24 @@ export default {
   padding: 0.3em;
   width: 150px;
   color: #228c22;
+  margin-right: 10px;
 }
 #randomizeButton:hover {
   background-color: #c4d270;
   color: white;
 }
-#randomizeButton:active {
+#shelfButton {
+  user-select: none;
+  cursor: pointer;
+  font-size: 20px;
+  background-color: #ffffff00;
+  border-radius: 10px;
+  border: 3px solid #c4d270;
+  padding: 0.3em;
+  width: 150px;
+  color: #228c22;
+}
+#shelfButton:hover {
   background-color: #c4d270;
   color: white;
 }
@@ -240,7 +271,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
   margin: 50px auto 25px auto;
+}
+#toast{
+  font-size: 25px;
 }
 </style>

@@ -34,6 +34,31 @@ app.get('/api/plants', async(req, res) => {
 
 app.post('/api/plants', async(req, res) => {
     try {
+        await Plant.deleteMany();
+
+        for(let plant of req.body.plants) {
+
+            const newPlant = new Plant({
+                name: plant.name,
+                plantType: plant.plantType,
+                potType: plant.potType,
+                isEmpty: plant.isEmpty,
+                index: plant.index,
+            });
+
+            await newPlant.save();
+        }
+
+        res.sendStatus(200);
+
+    } catch(error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+})
+
+app.post('/api/plant', async(req, res) => {
+    try {
         await Plant.deleteOne({
             index: req.body.index,
         });
@@ -46,37 +71,6 @@ app.post('/api/plants', async(req, res) => {
         });
         await plant.save();
         res.send(plant);
-    } catch(error) {
-        console.log(error);
-        res.sendStatus(500);
-    }
-});
-
-app.delete('/api/plants/:id', async(req, res) => {
-    try {
-        await Plant.deleteOne({
-            _id: req.params.id
-        });
-        res.sendStatus(200);
-    } catch(error) {
-        console.log(error);
-        res.sendStatus(500);
-    }
-});
-
-app.delete('/api/plants', async(req, res) => {
-    try {
-        await Plant.deleteMany();
-        for (let i = 0; i < 10; i++) {
-            await new Plant({
-                name: '',
-                plantType: 'images/empty-plant.png',
-                potType: 'images/empty-pot.png',
-                isEmpty: true,
-                index: i
-            }).save()
-        }
-        res.sendStatus(200);
     } catch(error) {
         console.log(error);
         res.sendStatus(500);

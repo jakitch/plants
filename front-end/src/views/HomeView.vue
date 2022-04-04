@@ -21,7 +21,7 @@ export default {
     replace: [
       {
       from: "Looking for zen?",
-      to: "Plant here.",
+      to: "Plant here!",
       }
     ]
   }),
