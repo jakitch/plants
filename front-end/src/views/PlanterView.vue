@@ -27,7 +27,7 @@
       <div id="randomizeButton" @click="randomizePlant">Randomize</div>
       <div id="shelfButton" @click="gotoShelf">Go To Shelf</div>
     </div>
-    <h2 id="toast">{{toastMessage}}</h2>
+    <h2 id="toast">{{ toastMessage }}</h2>
   </div>
 </template>
 
@@ -37,14 +37,14 @@ import axios from "axios";
 export default {
   name: "PlanterView",
   created() {
-    this.randomizePlant()
+    this.randomizePlant();
   },
   data() {
     return {
       plantName: "",
       currPlant: 0,
       currPot: 0,
-      toastMessage:"Don't forget to name your plant!",
+      toastMessage: "Don't forget to name your plant!",
       plantList: [
         "images/plant-01.png",
         "images/plant-02.png",
@@ -108,7 +108,7 @@ export default {
     },
     getNextAvaiableSpot(takenSpots) {
       let allSpots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-      for(let spot in allSpots) {
+      for (let spot in allSpots) {
         if (!takenSpots.includes(Number(spot))) {
           return Number(spot);
         }
@@ -116,40 +116,38 @@ export default {
     },
     async addPlant() {
       try {
-        let plantResult = await axios.get('/api/plants');
+        let plantResult = await axios.get("/api/plants");
         let plants = plantResult.data;
         let plantCount = 0;
         let takenSpots = [];
-        
+
         for (let plant of plants) {
-          if(!plant.isEmpty) {
+          if (!plant.isEmpty) {
             plantCount++;
             takenSpots.push(plant.index);
           }
         }
-        if(plantCount < 10) {
- 
+        if (plantCount < 10) {
           let nextSpot = this.getNextAvaiableSpot(takenSpots);
           await axios.post("/api/plant", {
-          name: this.plantName,
-          plantType: this.plantList[this.currPlant],
-          potType: this.potList[this.currPot],
-          isEmpty: false,
-          index: nextSpot
+            name: this.plantName,
+            plantType: this.plantList[this.currPlant],
+            potType: this.potList[this.currPot],
+            isEmpty: false,
+            index: nextSpot,
           });
-          this.toastMessage = "Added to shelf!"
-        }
-        else {
-          this.toastMessage = "Shelf is full!"
+          this.toastMessage = "Added to shelf!";
+        } else {
+          this.toastMessage = "Shelf is full!";
         }
       } catch (error) {
         console.log(error);
-        this.toastMessage = "Something is wrong..."
+        this.toastMessage = "Something is wrong...";
       }
     },
     gotoShelf() {
-    this.$router.push('/shelf');
-  }
+      this.$router.push("/shelf");
+    },
   },
 };
 </script>
@@ -161,7 +159,7 @@ export default {
   margin-bottom: 20px;
   margin-top: 20px;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 .planter input {
   width: 175px;
@@ -177,13 +175,13 @@ export default {
   background: #fffff000;
   color: black;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 .planter input::placeholder {
   color: black;
   font-style: italic;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 .img_container {
   display: flex;
@@ -194,20 +192,20 @@ export default {
   width: 300px;
   height: auto;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 #pot {
   width: 300px;
   height: auto;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 .arrow {
   cursor: pointer;
   width: 50px;
   height: 50px;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 .plant_selector {
   display: flex;
@@ -273,7 +271,71 @@ export default {
   align-items: center;
   margin: 50px auto 25px auto;
 }
-#toast{
+#toast {
   font-size: 25px;
+}
+
+@media (max-width: 450px) {
+  #plant {
+    width: 200px;
+    height: auto;
+  }
+  #pot {
+    width: 200px;
+    height: auto;
+  }
+  .arrow {
+    width: 35px;
+    height: auto;
+  }
+
+  .sign {
+    width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    margin-top: 0;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .planter input {
+    width: 160px;
+    padding-top: 108px;
+    font-size: 18px;
+  }
+  .planter input::placeholder {
+    color: black;
+    font-style: italic;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  #addButton {
+    font-size: 18px;
+    width: 60px;
+  }
+  #addButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
+  #randomizeButton {
+    font-size: 18px;
+    width: 130px;
+  }
+  #randomizeButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
+  #shelfButton {
+    font-size: 18px;
+    width: 130px;
+  }
+  #shelfButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
+  #toast {
+    font-size: 20px;
+    margin-bottom: 50px;
+  }
 }
 </style>

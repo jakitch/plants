@@ -69,12 +69,6 @@ export default {
 .button:hover {
   background-color: #c4d270;
   color: white;
-    /*background-color: #86b64f;*/
-}
-
-.button:active {
-  background-color: #c4d270;
-  color: white;
 }
 
 @media (max-width: 450px) {
@@ -83,5 +77,9 @@ export default {
     font-size: 50px;
     margin-bottom: 25px;
   }
+  .button:hover {
+  background-color: #ffffff00;
+  color: #228c22;
+}
 }
 </style>

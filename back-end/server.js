@@ -13,30 +13,30 @@ const plantSchema = new mongoose.Schema({
 const Plant = mongoose.model('Plant', plantSchema);
 
 mongoose.connect('mongodb+srv://therock:smallrock@cluster0.oxh0p.mongodb.net/plants?retryWrites=true&w=majority', {
-  useNewUrlParser: true
+    useNewUrlParser: true
 });
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+    extended: false
 }));
 
-app.get('/api/plants', async(req, res) => {
+app.get('/api/plants', async (req, res) => {
     try {
         let plants = await Plant.find();
         res.send(plants);
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 });
 
-app.post('/api/plants', async(req, res) => {
+app.post('/api/plants', async (req, res) => {
     try {
         await Plant.deleteMany();
 
-        for(let plant of req.body.plants) {
+        for (let plant of req.body.plants) {
 
             const newPlant = new Plant({
                 name: plant.name,
@@ -51,13 +51,13 @@ app.post('/api/plants', async(req, res) => {
 
         res.sendStatus(200);
 
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 })
 
-app.post('/api/plant', async(req, res) => {
+app.post('/api/plant', async (req, res) => {
     try {
         await Plant.deleteOne({
             index: req.body.index,
@@ -71,7 +71,7 @@ app.post('/api/plant', async(req, res) => {
         });
         await plant.save();
         res.send(plant);
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }

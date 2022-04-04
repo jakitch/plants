@@ -2,22 +2,18 @@
   <div>
     <div id="garden-header">
       <div id="garden-tag" v-if="!editingGarden">
-        <img id="backButton" src="images/left.png" @click="backToPlanting"/>
-      <h2 id="title">{{ gardenName }}</h2>
-      <img id="editButton" src="images/edit.png" @click="editGarden" />
-    </div>
-    <div class="button-container" v-if="editingGarden">
-      <div id="deleteAllButton" @click="removeAll">Unshelf All</div>
-      <div id="saveButton" @click="updatePlants">Save</div>
-      <div id="cancelButton" @click="cancelChanges">Cancel</div>
-    </div>
+        <img id="backButton" src="images/left.png" @click="backToPlanting" />
+        <h2 id="title">{{ gardenName }}</h2>
+        <img id="editButton" src="images/edit.png" @click="editGarden" />
+      </div>
+      <div class="button-container" v-if="editingGarden">
+        <div id="deleteAllButton" @click="removeAll">Unshelf All</div>
+        <div id="saveButton" @click="updatePlants">Save</div>
+        <div id="cancelButton" @click="cancelChanges">Cancel</div>
+      </div>
     </div>
     <ul class="shelf">
-      <li
-        class="plant-container"
-        v-for="plant in plants"
-        :key="plant.id"
-      > 
+      <li class="plant-container" v-for="plant in plants" :key="plant.id">
         <div
           class="delete-button"
           v-if="isDraggable(plant)"
@@ -25,13 +21,15 @@
         >
           X
         </div>
-        <div class="whole-plant"
-              v-bind:draggable="isDraggable(plant)"
-              v-on:dragstart="dragItem(plant)"
-              v-on:dragover.prevent
-              v-on:drop="dropItem(plant)">
-        <img class="plant-type" :src="plant.plantType" />
-        <img class="pot-type" :src="plant.potType" />
+        <div
+          class="whole-plant"
+          v-bind:draggable="isDraggable(plant)"
+          v-on:dragstart="dragItem(plant)"
+          v-on:dragover.prevent
+          v-on:drop="dropItem(plant)"
+        >
+          <img class="plant-type" :src="plant.plantType" />
+          <img class="pot-type" :src="plant.potType" />
         </div>
         <div class="name-tag">
           <img class="shelf-img" src="images/shelf.png" />
@@ -56,16 +54,16 @@ export default {
       gardenName: "The Zen Garden",
       plants: [],
       prevPlants: [],
-      drag: {}, 
-      dragPlant: '',
-      dragPot: '',
+      drag: {},
+      dragPlant: "",
+      dragPot: "",
     };
   },
   methods: {
     async getPlants() {
       try {
         let response = await axios.get("/api/plants");
-        response.data.sort((a, b) => (a.index > b.index) ? 1 : -1)
+        response.data.sort((a, b) => (a.index > b.index ? 1 : -1));
         this.plants = response.data;
         return this.plants;
       } catch (error) {
@@ -75,15 +73,15 @@ export default {
     async updatePlants() {
       this.editingGarden = false;
       try {
-        await axios.post('/api/plants', {
-          plants: this.plants
+        await axios.post("/api/plants", {
+          plants: this.plants,
         });
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
     backToPlanting() {
-      this.$router.push('/planter');
+      this.$router.push("/planter");
     },
     editGarden() {
       this.editingGarden = !this.editingGarden;
@@ -92,14 +90,14 @@ export default {
     backUpPlants() {
       this.prevPlants = [];
 
-      for(let plant of this.plants) {
+      for (let plant of this.plants) {
         this.prevPlants.push({
           _id: plant._id,
           name: plant.name,
           plantType: plant.plantType,
           potType: plant.potType,
           isEmpty: plant.isEmpty,
-          index: plant.index
+          index: plant.index,
         });
       }
     },
@@ -110,51 +108,51 @@ export default {
     removeAll() {
       let emptyShelf = [];
 
-      for(let i = 0; i < this.plants.length; i++) {
+      for (let i = 0; i < this.plants.length; i++) {
         emptyShelf.push({
           _id: i,
-          name:'',
+          name: "",
           plantType: "images/empty-plant.png",
           potType: "images/empty-pot.png",
           isEmpty: true,
-          index: i
+          index: i,
         });
       }
       this.plants = emptyShelf;
     },
     removePlant(plant) {
       let newPlants = [];
-      
+
       for (let planty of this.plants) {
         if (plant !== planty) newPlants.push(planty);
         else {
           const emptyPlant = {
             _id: plant._id,
-            name:'',
+            name: "",
             plantType: "images/empty-plant.png",
             potType: "images/empty-pot.png",
             isEmpty: true,
-            index: plant.index
+            index: plant.index,
           };
           newPlants.push(emptyPlant);
         }
       }
-      newPlants.sort((a, b) => (a.index > b.index) ? 1 : -1)
+      newPlants.sort((a, b) => (a.index > b.index ? 1 : -1));
       this.plants = newPlants;
     },
     dragItem(plant) {
       this.drag = plant;
-      event.dataTransfer
+      event.dataTransfer;
     },
     dropItem(plant) {
       const indexItem = this.drag.index;
       const indexTarget = plant.index;
       this.drag.index = indexTarget;
       plant.index = indexItem;
-      this.plants.sort((a, b) => (a.index > b.index) ? 1 : -1)
+      this.plants.sort((a, b) => (a.index > b.index ? 1 : -1));
     },
     isDraggable(plant) {
-      return this.editingGarden && !plant.isEmpty
+      return this.editingGarden && !plant.isEmpty;
     },
   },
 };
@@ -216,7 +214,7 @@ export default {
 .name-tag h2 {
   font-size: 20px;
   -webkit-user-drag: none;
-  user-select: none
+  user-select: none;
 }
 
 .shelf-img {
@@ -314,7 +312,7 @@ ul {
   padding-top: 20px;
 }
 #garden-header {
-  height: 60px
+  height: 60px;
 }
 #title {
   -webkit-user-drag: none;
@@ -329,5 +327,21 @@ ul {
   -webkit-user-drag: none;
   user-select: none;
   margin-right: 5px;
+}
+@media (max-width: 450px) {
+  #cancelButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
+
+  #saveButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
+
+  #deleteAllButton:hover {
+    background-color: #ffffff00;
+    color: #228c22;
+  }
 }
 </style>
