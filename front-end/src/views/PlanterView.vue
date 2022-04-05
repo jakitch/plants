@@ -1,6 +1,8 @@
 <template>
   <div class="planter">
+    <form>
     <input v-model="plantName" placeholder="Enter a name!" spellcheck="false" />
+    </form>
     <img class="sign" src="images/sign.png" />
     <div class="img_container">
       <div class="plant_selector">
@@ -23,9 +25,9 @@
       </div>
     </div>
     <div class="button-container">
+      <div id="shelfButton" @click="gotoShelf">Go To Shelf</div>
       <div id="addButton" @click="addPlant">Add</div>
       <div id="randomizeButton" @click="randomizePlant">Randomize</div>
-      <div id="shelfButton" @click="gotoShelf">Go To Shelf</div>
     </div>
     <h2 id="toast">{{ toastMessage }}</h2>
   </div>
@@ -44,7 +46,7 @@ export default {
       plantName: "",
       currPlant: 0,
       currPot: 0,
-      toastMessage: "Don't forget to name your plant!",
+      toastMessage: "Don't forget to add your plant!",
       plantList: [
         "images/plant-01.png",
         "images/plant-02.png",
@@ -104,8 +106,17 @@ export default {
       return num;
     },
     randomizePlant() {
-      this.currPlant = this.getRandomInt(0, this.plantList.length - 1);
-      this.currPot = this.getRandomInt(0, this.potList.length - 1);
+      let nextPlant = this.getRandomInt(0, this.plantList.length - 1);
+      while(this.currPlant === nextPlant ) {
+        nextPlant = this.getRandomInt(0, this.plantList.length - 1);
+      }
+      this.currPlant = nextPlant;
+      let nextPot = this.getRandomInt(0, this.plantList.length - 1);
+      while(this.currPot === nextPot ) {
+        nextPot = this.getRandomInt(0, this.plantList.length - 1);
+      }
+      this.currPot = nextPot;
+
     },
     getNextAvaiableSpot(takenSpots) {
       let allSpots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -118,11 +129,12 @@ export default {
     async addPlant() {
       if (!this.awatingDatabase) {
         this.awatingDatabase = true;
+        this.toastMessage = "Planting..."
         try {
-        let plantResult = await axios.get("/api/plants");
-        let plants = plantResult.data;
-        let plantCount = 0;
-        let takenSpots = [];
+          let plantResult = await axios.get("/api/plants");
+          let plants = plantResult.data;
+          let plantCount = 0;
+          let takenSpots = [];
 
           for (let plant of plants) {
             if (!plant.isEmpty) {
@@ -150,8 +162,6 @@ export default {
           this.awaitingDatbase = false;
         }
       }
-      else
-        this.toastMessage("Slow down! Plants need time to grow!");
     },
     gotoShelf() {
       this.$router.push("/shelf");
@@ -252,7 +262,6 @@ export default {
   padding: 0.3em;
   width: 150px;
   color: #228c22;
-  margin-right: 10px;
 }
 #randomizeButton:hover {
   background-color: #c4d270;
@@ -268,6 +277,7 @@ export default {
   padding: 0.3em;
   width: 150px;
   color: #228c22;
+  margin-right: 10px;
 }
 #shelfButton:hover {
   background-color: #c4d270;

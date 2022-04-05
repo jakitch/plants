@@ -1,41 +1,42 @@
 <template>
-<div class="home">
-  <typewriter class="zen-type"
-    :replace="replace"
-    :type-replace="100"
-    :replace-interval="1250">
-    Looking for zen?
-  </typewriter>
-  <div class="button" v-on:click="switchToPlanter">Start Planting</div>
-</div>
+  <div class="home">
+    <typewriter
+      class="zen-type"
+      :replace="replace"
+      :type-replace="100"
+      :replace-interval="1250"
+    >
+      Looking for zen?
+    </typewriter>
+    <div class="button" v-on:click="switchToPlanter">Start Planting</div>
+  </div>
 </template>
 
 <script>
-import Typewriter from "typewriter-vue"
+import Typewriter from "typewriter-vue";
 export default {
-  name:'HomeView',
+  name: "HomeView",
   components: {
     Typewriter,
   },
   data: () => ({
     replace: [
       {
-      from: "Looking for zen?",
-      to: "Plant here!",
-      }
-    ]
+        from: "Looking for zen?",
+        to: "Plant here!",
+      },
+    ],
   }),
   methods: {
     switchToPlanter() {
-      this.$router.push('/planter');
+      this.$router.push("/planter");
     },
   },
-}
+};
 </script>
 
 <style scoped>
-
-.home{
+.home {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -43,7 +44,7 @@ export default {
 }
 
 .zen-type {
-   user-select: none;
+  user-select: none;
   font-size: 140px;
   padding: 10px;
 }
@@ -72,14 +73,13 @@ export default {
 }
 
 @media (max-width: 450px) {
-
   .zen-type {
     font-size: 50px;
     margin-bottom: 25px;
   }
   .button:hover {
-  background-color: #ffffff00;
-  color: #228c22;
-}
+    background-color: #ffffff00;
+    color: #228c22;
+  }
 }
 </style>

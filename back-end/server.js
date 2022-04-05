@@ -35,9 +35,10 @@ app.get('/api/plants', async (req, res) => {
 app.post('/api/plants', async (req, res) => {
     try {
         await Plant.deleteMany();
-
+        let i = 0;
         for (let plant of req.body.plants) {
-
+            if (i === 10)
+                break;
             const newPlant = new Plant({
                 name: plant.name,
                 plantType: plant.plantType,
@@ -47,6 +48,7 @@ app.post('/api/plants', async (req, res) => {
             });
 
             await newPlant.save();
+            i++;
         }
 
         res.sendStatus(200);
