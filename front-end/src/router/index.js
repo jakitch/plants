@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PlanterView from '../views/PlanterView.vue'
 import ShelfView from '../views/ShelfView.vue'
+import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,12 @@ const routes = [
     path: '/shelf',
     name: 'shelf',
     component: ShelfView
+  },
+  {
+    path: '*',
+    component: NotFound
   }
+
 ]
 
 const router = new VueRouter({

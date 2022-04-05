@@ -65,6 +65,7 @@ export default {
         "images/pot-07.png",
         "images/pot-08.png",
       ],
+      awatingDatabase: false
     };
   },
   methods: {
@@ -115,35 +116,42 @@ export default {
       }
     },
     async addPlant() {
-      try {
+      if (!this.awatingDatabase) {
+        this.awatingDatabase = true;
+        try {
         let plantResult = await axios.get("/api/plants");
         let plants = plantResult.data;
         let plantCount = 0;
         let takenSpots = [];
 
-        for (let plant of plants) {
-          if (!plant.isEmpty) {
-            plantCount++;
-            takenSpots.push(plant.index);
+          for (let plant of plants) {
+            if (!plant.isEmpty) {
+              plantCount++;
+              takenSpots.push(plant.index);
+            }
           }
+          if (plantCount < 10) {
+            let nextSpot = this.getNextAvaiableSpot(takenSpots);
+            await axios.post("/api/plant", {
+              name: this.plantName,
+              plantType: this.plantList[this.currPlant],
+              potType: this.potList[this.currPot],
+              isEmpty: false,
+              index: nextSpot,
+            });
+            this.toastMessage = "Added to shelf!";
+          } else {
+            this.toastMessage = "Shelf is full!";
+          }
+          this.awatingDatabase = false;
+        } catch (error) {
+          console.log(error);
+          this.toastMessage = "Something is wrong...";
+          this.awaitingDatbase = false;
         }
-        if (plantCount < 10) {
-          let nextSpot = this.getNextAvaiableSpot(takenSpots);
-          await axios.post("/api/plant", {
-            name: this.plantName,
-            plantType: this.plantList[this.currPlant],
-            potType: this.potList[this.currPot],
-            isEmpty: false,
-            index: nextSpot,
-          });
-          this.toastMessage = "Added to shelf!";
-        } else {
-          this.toastMessage = "Shelf is full!";
-        }
-      } catch (error) {
-        console.log(error);
-        this.toastMessage = "Something is wrong...";
       }
+      else
+        this.toastMessage("Slow down! Plants need time to grow!");
     },
     gotoShelf() {
       this.$router.push("/shelf");
