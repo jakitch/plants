@@ -1,8 +1,8 @@
 <template>
 <div class="not-found">
   <h2 id="message">Woah, you're trying to access stuff that doesn't exist!</h2>   
-  <img id="head" src="images/cool-plant.png">
-  <img id="pot" src="images/nuke.png">
+  <img id="head" src="cool-plant.png">
+  <img id="pot" src="nuke.png">
   <div id="backButton" @click="backToPlanting">Back to Planting</div>
 
 </div>
